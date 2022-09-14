@@ -129,6 +129,7 @@ public static int solve(int[][] map) {
 위와 같이 메소드를 별도로 분리하면 아래와 같은 반복문을 더 간단하게 바꿀 수 있다.
 
 ``` java
+FOUND:
 for(int r=0; r<map.length; ++r)
     for(int c=0; c<map[0].length; ++c) {
         if(map[r][c]==1) {
@@ -144,9 +145,8 @@ for(int r=0; r<map.length; ++r)
 
 ``` java
 public static Status getStartingStatus(int[][] map) {
-    int row, col;
-    for (row = 0; row < map.length; row++)
-        for (col = 0; col < map[0].length; col++)
+    for (int row = 0; row < map.length; row++)
+        for (int col = 0; col < map[0].length; col++)
             if (map[row][col] == 1)
                 return new Status(row, col, 0);
 

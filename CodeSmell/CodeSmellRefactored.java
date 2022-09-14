@@ -37,9 +37,8 @@ public class CodeSmellRefactored {
 
 	// 시작 지점을 찾는 메소드 분리.
 	public static Status getStartingStatus(int[][] map) {
-		int row, col;
-		for (row = 0; row < map.length; row++)
-			for (col = 0; col < map[0].length; col++)
+		for (int row = 0; row < map.length; row++)
+			for (int col = 0; col < map[0].length; col++)
 				if (map[row][col] == 1)
 					return new Status(row, col, 0);		// 별도의 메소드로 분리하여 return 구문으로 반복문 레이블 제거 가능.
 
