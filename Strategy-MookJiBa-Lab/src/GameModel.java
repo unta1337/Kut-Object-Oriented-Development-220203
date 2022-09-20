@@ -7,8 +7,8 @@
  */
 public class GameModel {
 	private ComputerPlayer computer 
-		= new ComputerPlayer(new RandomStrategy());
-		//= new ComputerPlayer(new LastHandBasedStrategy());
+		// = new ComputerPlayer(new RandomStrategy());
+		= new ComputerPlayer(new LastHandBasedStrategy());
 	@SuppressWarnings("unused")
 	private HandType prevUserHand = null;
 	private HandType currUserHand = HandType.MOOK;
@@ -32,6 +32,10 @@ public class GameModel {
 	
 	public void setUserHand(HandType userHand) {
 		currUserHand = userHand;
+	}
+
+	public HandType prevUserHand() {
+		return prevUserHand;
 	}
 	
 	public HandType getComputerCurrentHand() {
