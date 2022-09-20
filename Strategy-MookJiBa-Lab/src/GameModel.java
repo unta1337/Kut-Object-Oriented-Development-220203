@@ -49,35 +49,12 @@ public class GameModel {
 	public GameResult playMookJiBa() {
 		GameResult GBBResult = playGawiBawiBo();
 
-		GameResult res = GameResult.DRAW;
-		if (isUserAttack) {
-			switch (GBBResult) {
-				case DRAW:
-					res =  GameResult.USERWIN;
-					break;
-				case USERWIN:
-					res = GameResult.DRAW;
-					break;
-				case COMPUTERWIN:
-					res = GameResult.DRAW;
-					break;
-			}
-		}
-		else {
-			switch (GBBResult) {
-				case DRAW:
-					res = GameResult.COMPUTERWIN;
-					break;
-				case USERWIN:
-					res =  GameResult.DRAW;
-					break;
-				case COMPUTERWIN:
-					res =  GameResult.DRAW;
-					break;
-			}
-		}
+		// 가위바위보의 결과가 비겼다면, 공격한 쪽의 승리.
+		if (GBBResult == GameResult.DRAW)
+			return isUserAttack ? GameResult.USERWIN : GameResult.COMPUTERWIN;
 
-		return res;
+		// 나머지 경우에 대해선 승자를 결정할 수 없음.
+		return GameResult.DRAW;
 	}
 	
 	// 가위바위보 게임 결과 판단
@@ -86,20 +63,31 @@ public class GameModel {
 		int userHandInteger = currUserHand.ordinal();
 		int computerHandInteger = computer.getHand().ordinal();
 
+		/*
+		 * R S P R S P
+		 * 0 1 2 3 4 5
+		 * 
+		 * (3 + user) - comp
+		 * -> user가 승리일 때 위의 식은 2 또는 4.
+		 * -> 이에 mod 3을 적용하면 1.
+		 * => 위의 식에 mod 3를 적용한 값이 1이면 user 승.
+		 */
+
 		int resultInteger = 3 + userHandInteger - computerHandInteger;
 		resultInteger %= 3;
 
-		if (userHandInteger == computerHandInteger)
-			return GameResult.DRAW;
-		else if (resultInteger == 2)
-		{
-			playingMookJiBa = true;
-			isUserAttack = true;
-			return GameResult.USERWIN;
-		}
+		// 결과 기본값을 컴퓨터의 승으로 설정한 후, 조건문을 통해 최종 결과 도출.
+		GameResult result = GameResult.COMPUTERWIN;
 
-		playingMookJiBa = true;
-		isUserAttack = false;
-		return GameResult.COMPUTERWIN;
+		if (resultInteger == 2)
+			result = GameResult.USERWIN;
+		else if (userHandInteger == computerHandInteger)
+			result = GameResult.DRAW;
+
+		// 각 상황에 맞는 플래그 갱신.
+		playingMookJiBa = result != GameResult.DRAW;
+		isUserAttack = result == GameResult.USERWIN;
+
+		return result;
 	}
 }
