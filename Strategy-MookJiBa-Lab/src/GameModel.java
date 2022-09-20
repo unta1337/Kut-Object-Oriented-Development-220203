@@ -85,8 +85,8 @@ public class GameModel {
 			result = GameResult.DRAW;
 
 		// 각 상황에 맞는 플래그 갱신.
-		playingMookJiBa = result != GameResult.DRAW;
-		isUserAttack = result == GameResult.USERWIN;
+		playingMookJiBa = result != GameResult.DRAW;										// 상태에 상관없이 비기지 않으면 묵찌빠 상태로 넘어감.
+		isUserAttack = playingMookJiBa ? result == GameResult.USERWIN : isUserAttack;		// 공격 상황 판단은 묵찌빠 상태로 넘어갈 때에만 유효함.
 
 		return result;
 	}
