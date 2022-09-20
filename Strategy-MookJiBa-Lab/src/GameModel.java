@@ -1,7 +1,7 @@
 /**
  * @copyright 한국기술교육대학교 컴퓨터공학부 객체지향개발론및실습
  * @version 2022년도 2학기 
- * @author 김상진
+ * @author 김상진, 김성녕
  * @file: GameModel.java 
  * 묵찌바 게임에 필요한 데이터를 유지하고 게임 로직 제공
  */
@@ -47,12 +47,59 @@ public class GameModel {
 	// 묵찌바 게임 결과 판단
 	// @return 묵찌바 게임의 결과
 	public GameResult playMookJiBa() {
-		return GameResult.DRAW;
+		GameResult GBBResult = playGawiBawiBo();
+
+		GameResult res = GameResult.DRAW;
+		if (isUserAttack) {
+			switch (GBBResult) {
+				case DRAW:
+					res =  GameResult.USERWIN;
+					break;
+				case USERWIN:
+					res = GameResult.DRAW;
+					break;
+				case COMPUTERWIN:
+					res = GameResult.DRAW;
+					break;
+			}
+		}
+		else {
+			switch (GBBResult) {
+				case DRAW:
+					res = GameResult.COMPUTERWIN;
+					break;
+				case USERWIN:
+					res =  GameResult.DRAW;
+					break;
+				case COMPUTERWIN:
+					res =  GameResult.DRAW;
+					break;
+			}
+		}
+
+		return res;
 	}
 	
 	// 가위바위보 게임 결과 판단
 	// @return 가위바위보 게임의 결과 
 	public GameResult playGawiBawiBo() {
-		return GameResult.DRAW;
+		int userHandInteger = currUserHand.ordinal();
+		int computerHandInteger = computer.getHand().ordinal();
+
+		int resultInteger = 3 + userHandInteger - computerHandInteger;
+		resultInteger %= 3;
+
+		if (userHandInteger == computerHandInteger)
+			return GameResult.DRAW;
+		else if (resultInteger == 2)
+		{
+			playingMookJiBa = true;
+			isUserAttack = true;
+			return GameResult.USERWIN;
+		}
+
+		playingMookJiBa = true;
+		isUserAttack = false;
+		return GameResult.COMPUTERWIN;
 	}
 }
