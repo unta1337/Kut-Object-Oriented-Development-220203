@@ -8,7 +8,7 @@
  */
 public class RandomStrategy implements PlayingStrategy {
 	@Override
-	public HandType computeNextHand() {
+	public HandType computeNextHand(GameModel model) {
 		return HandType.values()[(int) (Math.random() * HandType.values().length)];
 	}
 }
