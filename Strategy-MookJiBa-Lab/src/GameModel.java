@@ -8,7 +8,8 @@
 public class GameModel {
 	private ComputerPlayer computer 
 		// = new ComputerPlayer(new RandomStrategy());
-		= new ComputerPlayer(new LastHandBasedStrategy());
+		// = new ComputerPlayer(new LastHandBasedStrategy());
+		= new ComputerPlayer(new BiasStrategy());
 	@SuppressWarnings("unused")
 	private HandType prevUserHand = null;
 	private HandType currUserHand = HandType.MOOK;
