@@ -2,8 +2,9 @@
  * @copyright 한국기술교육대학교 컴퓨터공학부 객체지향개발론및실습
  * @version 2022년도 2학기 
  * @author 김성녕
- * @file PlayingStrategy.java
- * 전략 패턴: 전략 Interface
+ * @file LastHandBasedStrategy.java
+ * 전략패턴: 구체적인 전략 클래스
+ * user의 이전 손을 기준으로 공격 및 방어 시의 손을 능동적으로 선택
  */
 public class LastHandBasedStrategy implements PlayingStrategy {
     @Override
