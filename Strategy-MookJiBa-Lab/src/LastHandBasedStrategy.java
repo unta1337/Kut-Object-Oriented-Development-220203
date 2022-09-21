@@ -1,3 +1,5 @@
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * @copyright 한국기술교육대학교 컴퓨터공학부 객체지향개발론및실습
  * @version 2022년도 2학기 
@@ -9,11 +11,12 @@
 public class LastHandBasedStrategy implements PlayingStrategy {
     @Override
     public HandType computeNextHand(GameModel model) {
-        double determineHandDouble = Math.random();
+        double determineHandDouble = ThreadLocalRandom.current().nextDouble();
 
         int prevUserHandInteger = model.prevUserHand() != null ? model.prevUserHand().ordinal() : -1;
-        if (prevUserHandInteger == -1)
-            return HandType.values()[(int) (Math.random() * HandType.values().length)];
+        if (prevUserHandInteger == -1) {
+            return HandType.valueOf(ThreadLocalRandom.current().nextInt(HandType.values().length));
+        }
 
         int handIndex = 0;
         if (determineHandDouble < 0.2) {
@@ -29,10 +32,10 @@ public class LastHandBasedStrategy implements PlayingStrategy {
             // 수비 상황일 경우 해당 턴에서 지는 것을 막기 위해 (user가 낼 것으로 기대되는) 이전 턴에서 user가 내지 않은 손 중에서 채택.
             // 공격 상황일 경우 해당 턴에서 이기기 위해 (user가 낼 것으로 기대되는) 이전 턴에서 user가 내지 않은 손 중에서 채택.
             // 따라서 수비와 공격에 상관없이 이전에 user가 내지 않은 손 중에서 무작위로 채택한다.
-            handIndex = ((int) (Math.random() * 2) + prevUserHandInteger + 1) % 3;
+            handIndex = (ThreadLocalRandom.current().nextInt(2) + prevUserHandInteger + 1) % 3;
         }
 
-        return HandType.values()[handIndex];
+        return HandType.valueOf(handIndex);
     }
     
 }

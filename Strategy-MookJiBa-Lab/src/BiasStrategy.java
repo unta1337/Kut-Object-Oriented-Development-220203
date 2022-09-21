@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @copyright 한국기술교육대학교 컴퓨터공학부 객체지향개발론및실습
@@ -28,7 +29,7 @@ public class BiasStrategy implements PlayingStrategy {
     public HandType computeNextHand(GameModel model) {
         // 최초 1회에 한해 user에 대한 정보가 없으므로 무작위 손 선택.
         if (model.prevUserHand() == null) {
-            return HandType.values()[(int) (Math.random() * HandType.values().length)];
+            return HandType.valueOf(ThreadLocalRandom.current().nextInt(HandType.values().length));
         }
 
         // user가 낸 손 기록.
@@ -43,20 +44,20 @@ public class BiasStrategy implements PlayingStrategy {
 
         // 과거의 손 비율을 바탕으로 다음 손으로 기대되는 손에 대해 전략 수행.
         double probability = 0;
-        double randomValue = Math.random();
+        double randomValue = ThreadLocalRandom.current().nextDouble();
         int handIndex = 0;
 
         // 공격 상황이 아닐 때에는 user가 내지 않을 것으로 기대되는 손으로 방어.
         // 공격 상황일 때에는 user가 낼 것으로 기대되는 손으로 공격.
         if (randomValue < (probability += mookRatio)) {
-            handIndex = model.isUserAttack() ? ((int) (Math.random() * 2) + HandType.MOOK.ordinal() + 1) % 3 : HandType.MOOK.ordinal();
+            handIndex = model.isUserAttack() ? (ThreadLocalRandom.current().nextInt(2) + HandType.MOOK.ordinal() + 1) % 3 : HandType.MOOK.ordinal();
         } else if (randomValue < (probability += jiRatio)) {
-            handIndex = model.isUserAttack() ? ((int) (Math.random() * 2) + HandType.JI.ordinal() + 1) % 3 : HandType.JI.ordinal();
+            handIndex = model.isUserAttack() ? (ThreadLocalRandom.current().nextInt(2) + HandType.JI.ordinal() + 1) % 3 : HandType.JI.ordinal();
         } else if (randomValue < (probability += baRatio)) {
-            handIndex = model.isUserAttack() ? ((int) (Math.random() * 2) + HandType.BA.ordinal() + 1) % 3 : HandType.BA.ordinal();
+            handIndex = model.isUserAttack() ? (ThreadLocalRandom.current().nextInt(2) + HandType.BA.ordinal() + 1) % 3 : HandType.BA.ordinal();
         }
 
-        return HandType.values()[handIndex];
+        return HandType.valueOf(handIndex);
     }
     
 }
