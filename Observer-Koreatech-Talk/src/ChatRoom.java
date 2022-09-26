@@ -80,6 +80,8 @@ public class ChatRoom{
 	}
 	
 	public void deleteMessage(int index) {
-		// 완성하시오.
+		// 채팅방에서는 정보의 유지 및 인덱스 일관성을 위해 해당하는 인덱스의 삭제 플래그만 갱신.
+		// 채팅방의 메시지를 삭제하지 않으므로 유저의 메시지 로그를 채팅방 로그 인덱스 기준으로 한다면, 인덱스에 대해 신경쓰지 않아도 됨.
+		roomLog.get(index).setDeleteFlag();
 	}
 }

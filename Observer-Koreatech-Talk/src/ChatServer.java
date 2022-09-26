@@ -6,7 +6,7 @@ import java.util.Objects;
 /**
  * @copyright 한국기술교육대학교 컴퓨터공학부 객체지향개발론및실습
  * @version 2022년도 2학기
- * @author 김상진
+ * @author 김상진, 김성녕
  * @file ChatServer.java 
  * 채팅 프로그램에서 통신 서버와 데이터베이스 서버 역할을 함 
  * 채팅룸 목록, 사용자 목록 유지
@@ -54,7 +54,11 @@ public class ChatServer {
 	// 통신 서버 역할을 위한 메소드들
 	// 메시지 삭제 (메시지의 전송자만 가능)
 	public void deleteMessage(String roomName, int index) {
-		// 완성하시오.
+		if(!chatRooms.containsKey(Objects.requireNonNull(roomName)))
+			throw new IllegalArgumentException(roomName+" 방이 존재하지 않습니다.");
+
+		// 해당 채팅방에서 메시지 삭제.
+		chatRooms.get(roomName).deleteMessage(index);
 	}
 	
 	// 사용자가 메시지를 전송할 때 사용하는 메소드
