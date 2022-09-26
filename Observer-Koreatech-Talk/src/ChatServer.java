@@ -39,14 +39,24 @@ public class ChatServer {
 	}
 	
 	public void addUserToRoom(String userID, String roomName) {
-		// 예외 처리 추가
+		// 사용자와 채팅방에 대한 예외처리.
+		if(!users.containsKey(Objects.requireNonNull(userID)))
+			throw new IllegalArgumentException(userID+" 사용자가 존재하지 않습니다.");
+		if(!chatRooms.containsKey(Objects.requireNonNull(roomName)))
+			throw new IllegalArgumentException(roomName+" 방이 존재하지 않습니다.");
+
 		User user = users.get(userID);
 		ChatRoom chatRoom = chatRooms.get(roomName);
 		if(chatRoom.addUser(userID)) // 간단 중복 검사
 			user.joinRoom(roomName);
 	}
 	public void deleteUserFromRoom(String userID, String roomName) {
-		// 예외 처리 추가
+		// 사용자와 채팅방에 대한 예외처리.
+		if(!users.containsKey(Objects.requireNonNull(userID)))
+			throw new IllegalArgumentException(userID+" 사용자가 존재하지 않습니다.");
+		if(!chatRooms.containsKey(Objects.requireNonNull(roomName)))
+			throw new IllegalArgumentException(roomName+" 방이 존재하지 않습니다.");
+
 		ChatRoom chatRoom = chatRooms.get(roomName);
 		chatRoom.deleteUser(userID);
 	}
