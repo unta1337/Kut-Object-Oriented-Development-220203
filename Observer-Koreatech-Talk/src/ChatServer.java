@@ -63,6 +63,7 @@ public class ChatServer {
 	
 	// 통신 서버 역할을 위한 메소드들
 	// 메시지 삭제 (메시지의 전송자만 가능)
+	// 참고: 본 메소드를 호출하는 ChatWindow의 deleteMessage에서 본인 확인을 하므로 따로 구현할 필요가 없음.
 	public void deleteMessage(String roomName, int index) {
 		if(!chatRooms.containsKey(Objects.requireNonNull(roomName)))
 			throw new IllegalArgumentException(roomName+" 방이 존재하지 않습니다.");
