@@ -89,14 +89,14 @@ public class ChatRoom{
 /*
  * 1. 본 실습의 관찰자 패턴은 push 방식인가 pull 방식인가?
  * 	   본 실습에서 ChatRoom과 관계를 맺고 있는 클래스는 아래와 같다.
- *
+ * 
  *     관찰자         관찰 대상     관련 메소드
- *     ChatWindow     User         update, updateChatArea
- *
- *     ChatWindow의 update 메소드는 roomName만을 받아 역할을 수행한다.
- *     이때 ChatWindow와 관계를 맺은 User에 대한 정보가 없으므로 pull 방식이라고 생각해볼 수 있다.
- *     실제로 update와 연결된 메소드 updateChatArea를 살펴보면 ChatWindow가 유지하고 있는 user 변수를 통해 User 클래스에 접근하여 필요한 변수를 취하는 것을 볼 수 있다.
- *     따라서 이는 pull 방식이다.
+ *     User           ChatRoom     update
+ * 
+ *     이때 User의 update 메소드는 인자로 roomName과 message를 취한다.
+ *     User와 관계를 맺은 ChatRoom에 대한 정보를 전달하여 pull 방식 같아 보일 수 있다.
+ *     하지만 해당 변수는 User가 유지하는 roomLogs 리스트에서 특정 채팅방을 탐색하는 용도로 사용된다.
+ *     즉 roomName을 통해 ChatRoom 클래스로부터 불러오는 정보가 없고, message만을 통해 User가 유지하는 roomLogs를 갱신하므로 이는 push 방식이다.
  * 
  * 2. 관찰 대상이 복수일 때 관찰자가 관찰 대상을 어떻게 구분하는가?
  *     본 실습에서 User는 roomLogs를 해시맵으로 저장하여 roomName 또는 채팅방의 이름 이용해 구분한다.
@@ -106,12 +106,12 @@ public class ChatRoom{
  *     ChatRoom-User 관계 외에 관찰자-관찰 대상으로 모델링된 클래스는 아래와 같다.
  * 
  *     관찰자         관찰 대상     관련 메소드
- *     User           ChatRoom     update
- * 
- *     이때 User의 update 메소드는 인자로 roomName과 message를 취한다.
- *     User와 관계를 맺은 ChatRoom에 대한 정보를 전달하여 pull 방식 같아 보일 수 있다.
- *     하지만 해당 변수는 User가 유지하는 roomLogs 리스트에서 특정 채팅방을 탐색하는 용도로 사용된다.
- *     즉 roomName을 통해 ChatRoom 클래스로부터 불러오는 정보가 없고, message만을 통해 User가 유지하는 roomLogs를 갱신하므로 이는 push 방식이다.
+ *     ChatWindow     User         update, updateChatArea
+ *
+ *     ChatWindow의 update 메소드는 roomName만을 받아 역할을 수행한다.
+ *     이때 ChatWindow와 관계를 맺은 User에 대한 정보가 없으므로 pull 방식이라고 생각해볼 수 있다.
+ *     실제로 update와 연결된 메소드 updateChatArea를 살펴보면 ChatWindow가 유지하고 있는 user 변수를 통해 User 클래스에 접근하여 필요한 변수를 취하는 것을 볼 수 있다.
+ *     따라서 이는 pull 방식이다.
  * 
  *     이 밖에도 JavaFX의 이벤트 핸들러 등이 관찰자-관찰 대상 관계로 모델링된다.
  */
