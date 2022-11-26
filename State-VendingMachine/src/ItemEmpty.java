@@ -6,10 +6,7 @@
  * 상품이 없는 상태
  */
 public class ItemEmpty implements State {
-    private VendingMachine vendingMachine;
-
     public ItemEmpty(VendingMachine vendingMachine) {
-        this.vendingMachine = vendingMachine;
     }
 
     @Override

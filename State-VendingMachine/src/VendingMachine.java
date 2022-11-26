@@ -9,7 +9,6 @@ public class VendingMachine {
 	private InventoryStock inventoryStock = new InventoryStock(); 		// 자판기가 보유하고 있는 음료 정보
 	private CashRegister cashRegister = new CashRegister();       		// 자판기가 보유하고 있는 돈 정보 (고객이 투입한 돈도 포함)
 	private CashRegister userCashRegister = new CashRegister();   		// 고객이 투입한 돈 정보
-	// private int userCashAmountRegister = 0;
 
 	private State itemEmpty;
 	private State coinEmpty;
@@ -40,6 +39,7 @@ public class VendingMachine {
 	public void clearItems() {
 		inventoryStock.clear();
 
+		// 재고 소진 상태 전환.
 		state = itemEmpty;
 	}
 	
@@ -47,6 +47,7 @@ public class VendingMachine {
 	public void setItems(Item item, int amount) {
 		inventoryStock.setItem(item, amount);
 
+		// 동전 소진 상태 전환.
 		state = coinEmpty;
 	}
 	
@@ -54,8 +55,9 @@ public class VendingMachine {
 	public void removeItem(Item item) {
 		inventoryStock.removeItem(item);
 
+		// 재고 소진 시 상태 변환.
 		if (isEmpty())
-			state = coinEmpty;
+			state = itemEmpty;
 	}
 	
 	// cashRegister 상호작용
@@ -85,7 +87,6 @@ public class VendingMachine {
 	// 고객이 투입한 돈은 자판기 보유 돈에도 포함하여 처리함
 	public void addCash(Currency currency, int amount) {
 		userCashRegister.add(currency, amount);
-		// userCashAmountRegister += currency.value * amount;
 		cashRegister.add(currency, amount);
 	}
 	
@@ -97,9 +98,9 @@ public class VendingMachine {
 	public void selectItem(Item item) throws ChangeNotAvailableException {
 		state.selectItem(item);
 
-		if (state == itemSold) {
+		// 구매가 성공적으로 이뤄져 상품 배출이 필요하면 해당 동작 수행.
+		if (state == itemSold)
 			state.dispenseItem(item);
-		}
 	}
 	
 	public void cancel() {
@@ -120,15 +121,6 @@ public class VendingMachine {
 			}
 		}
 		userCashRegister.clear();
-
-		// CashRegister change = getChange(userCashAmountRegister);
-		// for(var cash : change.getHoldingCash())
-		// 	if(cash.getValue() > 0)
-		// 	{
-		// 		System.out.println(cash.getKey());
-		// 		cashRegister.remove(cash.getKey(), cash.getValue());
-		// 	}
-		// userCashAmountRegister = 0;
 	}
 	
 	// 주어진 item을 구입할 수 있는지 여부를 알려줌
@@ -175,24 +167,4 @@ public class VendingMachine {
 	public void setState(State state) {
 		this.state = state;
 	}
-
-	public CashRegister getCachRegister() {
-		return cashRegister;
-	}
-
-	public CashRegister getUserCachRegister() {
-		return userCashRegister;
-	}
-
-	public InventoryStock getInventoryStock() {
-		return inventoryStock;
-	}
-
-	// public void addAmount(Currency currency, int amount) {
-	// 	userCashAmountRegister += currency.value * amount;
-	// }
-
-	// public void addAmount(int amount) {
-	// 	userCashAmountRegister += amount;
-	// }
 }

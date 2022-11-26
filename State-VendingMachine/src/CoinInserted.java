@@ -15,18 +15,22 @@ public class CoinInserted implements State {
     @Override
     public void insertCash(Currency currency, int amount) {
         System.out.println("Insert a coin into the machine.");
-        // vendingMachine.getCachRegister().add(currency, amount);;
-        // vendingMachine.getUserCachRegister().add(currency, amount);;
+
+        // 추가 동전 삽입.
         vendingMachine.addCash(currency, amount);
-        // vendingMachine.addAmount(currency, amount);
     }
 
     @Override
     public void selectItem(Item item) throws ChangeNotAvailableException {
+        System.out.println("You've seleted " + item.toString() + ".");
+
+        // 상품 구매할 수 없을 때 처리.
         if (!vendingMachine.canBuyItem(item)) {
+            // 다른 구매 가능한 상품이 없으면 거스름 반환.
             if (!vendingMachine.canBuyAnyItem())
                 vendingMachine.returnChange();
 
+            // 거스름 관련 예외 발생.
             throw new ChangeNotAvailableException(!vendingMachine.canBuyAnyItem());
         }
 
@@ -35,7 +39,9 @@ public class CoinInserted implements State {
 
     @Override
     public void cancel() {
-        System.out.println("hiiii");
+        System.out.println("Item selection canceled.");
+
+        // 상품 구매 취소 시 거스름 반환 및 상태 전환.
         vendingMachine.returnChange();
         vendingMachine.setState(vendingMachine.getCoinEmpty());
     }

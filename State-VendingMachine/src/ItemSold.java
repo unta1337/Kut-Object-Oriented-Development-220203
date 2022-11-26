@@ -14,12 +14,12 @@ public class ItemSold implements State {
 
     @Override
     public void insertCash(Currency currency, int amount) {
-        System.out.println("Product on its way! Please wait for a second.");
+        System.out.println("Product is on its way! Please wait for a second.");
     }
 
     @Override
     public void selectItem(Item item) {
-        System.out.println("Product on its way! Please wait for a second.");
+        System.out.println("Product is on its way! Please wait for a second.");
     }
 
     @Override
@@ -29,19 +29,22 @@ public class ItemSold implements State {
 
     @Override
     public void dispenseItem(Item item) {
-        System.out.println("Product on its way! Please wait for a second.");
+        System.out.println("Product is on its way! Please wait for a second.");
 
-        vendingMachine.getInventoryStock().removeItem(item);
+        // 상품 배출.
+        vendingMachine.removeItem(item);
 
-        CashRegister newUserCashRegister = vendingMachine.getChange(vendingMachine.getUserCachRegister().getBalance() - item.price);
+        // 거스름 처리.
+        CashRegister newUserCashRegister = vendingMachine.getChange(vendingMachine.getInsertedBalance() - item.price);
         vendingMachine.setUserCashRegister(newUserCashRegister);
 
+        // 더 이상 구매 가능한 상품이 없으면 상태 전환.
         if (!vendingMachine.canBuyAnyItem()) {
             vendingMachine.returnChange();
-            vendingMachine.setState(vendingMachine.getItemEmpty());
             return;
         }
 
+        // 계속해서 구매 가능하면 동전 삽입 상태로 전환.
         vendingMachine.setState(vendingMachine.getCoinInserted());
     }
 }

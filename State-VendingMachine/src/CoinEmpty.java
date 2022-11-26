@@ -15,10 +15,9 @@ public class CoinEmpty implements State {
     @Override
     public void insertCash(Currency currency, int amount) {
         System.out.println("Insert a coin into the machine.");
-        // vendingMachine.getCachRegister().add(currency, amount);;
-        // vendingMachine.getUserCachRegister().add(currency, amount);
+        
+        // 동전 삽입 후 대기 상태(동전이 삽입되어 상품 선택을 기다리는 상태)로 전환.
         vendingMachine.addCash(currency, amount);
-        // vendingMachine.addAmount(currency, amount);
         vendingMachine.setState(vendingMachine.getCoinInserted());
     }
 
