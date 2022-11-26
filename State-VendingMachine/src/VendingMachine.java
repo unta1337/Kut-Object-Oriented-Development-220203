@@ -8,8 +8,8 @@
 public class VendingMachine {
 	private InventoryStock inventoryStock = new InventoryStock(); 		// 자판기가 보유하고 있는 음료 정보
 	private CashRegister cashRegister = new CashRegister();       		// 자판기가 보유하고 있는 돈 정보 (고객이 투입한 돈도 포함)
-	// private CashRegister userCashRegister = new CashRegister();   		// 고객이 투입한 돈 정보
-	private int userCashAmountRegister = 0;
+	private CashRegister userCashRegister = new CashRegister();   		// 고객이 투입한 돈 정보
+	// private int userCashAmountRegister = 0;
 
 	private State itemEmpty;
 	private State coinEmpty;
@@ -73,19 +73,19 @@ public class VendingMachine {
 	
 	// userCashRegister 상호작용
 	public int getInsertedBalance() {
-		//return userCashRegister.getBalance();
-		return userCashAmountRegister;
+		return userCashRegister.getBalance();
+		// return userCashAmountRegister;
 	}
 	
-	// public void setUserCashRegister(CashRegister changeRegister) {
-	// 	userCashRegister = changeRegister;
-	// }
+	public void setUserCashRegister(CashRegister changeRegister) {
+		userCashRegister = changeRegister;
+	}
 	
 	// 실제 투입된 돈을 처리하는 메소드
 	// 고객이 투입한 돈은 자판기 보유 돈에도 포함하여 처리함
 	public void addCash(Currency currency, int amount) {
-		// userCashRegister.add(currency, amount);
-		userCashAmountRegister += currency.value * amount;
+		userCashRegister.add(currency, amount);
+		// userCashAmountRegister += currency.value * amount;
 		cashRegister.add(currency, amount);
 	}
 	
@@ -112,26 +112,29 @@ public class VendingMachine {
 	}
 	
 	public void returnChange() {
-		// for(var cash: userCashRegister.getHoldingCash()) {
-		// 	if(cash.getValue()>0)
-		// 		cashRegister.remove(cash.getKey(), cash.getValue());
-		// }
-		// userCashRegister.clear();
-
-		CashRegister change = getChange(userCashAmountRegister);
-		for(var cash : change.getHoldingCash())
-			if(cash.getValue() > 0)
+		for(var cash: userCashRegister.getHoldingCash()) {
+			if(cash.getValue()>0)
 			{
 				System.out.println(cash.getKey());
 				cashRegister.remove(cash.getKey(), cash.getValue());
 			}
-		userCashAmountRegister = 0;
+		}
+		userCashRegister.clear();
+
+		// CashRegister change = getChange(userCashAmountRegister);
+		// for(var cash : change.getHoldingCash())
+		// 	if(cash.getValue() > 0)
+		// 	{
+		// 		System.out.println(cash.getKey());
+		// 		cashRegister.remove(cash.getKey(), cash.getValue());
+		// 	}
+		// userCashAmountRegister = 0;
 	}
 	
 	// 주어진 item을 구입할 수 있는지 여부를 알려줌
 	boolean canBuyItem(Item item) {
-		// int changeAmount = userCashRegister.getBalance()-item.price;
-		int changeAmount = userCashAmountRegister - item.price;
+		int changeAmount = userCashRegister.getBalance()-item.price;
+		// int changeAmount = userCashAmountRegister - item.price;
 		if(changeAmount<0) return false;
 		else if(changeAmount==0) return true;
 		else {
@@ -177,19 +180,19 @@ public class VendingMachine {
 		return cashRegister;
 	}
 
-	// public CashRegister getUserCachRegister() {
-	// 	return userCashRegister;
-	// }
+	public CashRegister getUserCachRegister() {
+		return userCashRegister;
+	}
 
 	public InventoryStock getInventoryStock() {
 		return inventoryStock;
 	}
 
-	public void addAmount(Currency currency, int amount) {
-		userCashAmountRegister += currency.value * amount;
-	}
+	// public void addAmount(Currency currency, int amount) {
+	// 	userCashAmountRegister += currency.value * amount;
+	// }
 
-	public void addAmount(int amount) {
-		userCashAmountRegister += amount;
-	}
+	// public void addAmount(int amount) {
+	// 	userCashAmountRegister += amount;
+	// }
 }

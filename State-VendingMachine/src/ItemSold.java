@@ -32,8 +32,9 @@ public class ItemSold implements State {
         System.out.println("Product on its way! Please wait for a second.");
 
         vendingMachine.getInventoryStock().removeItem(item);
-        //vendingMachine.getUserCachRegister().remove(null, 0);
-        vendingMachine.addAmount(-item.price);
+
+        CashRegister newUserCashRegister = vendingMachine.getChange(vendingMachine.getUserCachRegister().getBalance() - item.price);
+        vendingMachine.setUserCashRegister(newUserCashRegister);
 
         if (!vendingMachine.canBuyAnyItem()) {
             vendingMachine.returnChange();
