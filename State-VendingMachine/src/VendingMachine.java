@@ -10,20 +10,10 @@ public class VendingMachine {
 	private CashRegister cashRegister = new CashRegister();       		// 자판기가 보유하고 있는 돈 정보 (고객이 투입한 돈도 포함)
 	private CashRegister userCashRegister = new CashRegister();   		// 고객이 투입한 돈 정보
 
-	private State itemEmpty;
-	private State coinEmpty;
-	private State coinInserted;
-	private State itemSold;
-
 	private State state;
 
 	public VendingMachine() {
-		this.itemEmpty = new ItemEmpty(this);
-		this.coinEmpty = new CoinEmpty(this);
-		this.coinInserted = new CoinInserted(this);
-		this.itemSold = new ItemSold(this);
-
-		this.state = itemEmpty;
+		this.state = State.ITEM_EMPTY;
 	}
 	
 	// InventoryStock 상호작용
@@ -40,7 +30,7 @@ public class VendingMachine {
 		inventoryStock.clear();
 
 		// 재고 소진 상태 전환.
-		state = itemEmpty;
+		state = State.ITEM_EMPTY;
 	}
 	
 	// 상태 변화가 필요할 수 있음
@@ -48,7 +38,7 @@ public class VendingMachine {
 		inventoryStock.setItem(item, amount);
 
 		// 동전 소진 상태 전환.
-		state = coinEmpty;
+		state = State.COIN_EMPTY;
 	}
 	
 	// 상태 변화가 필요할 수 있음
@@ -57,7 +47,7 @@ public class VendingMachine {
 
 		// 재고 소진 시 상태 변환.
 		if (isEmpty())
-			state = itemEmpty;
+			state = State.ITEM_EMPTY;
 	}
 	
 	// cashRegister 상호작용
@@ -92,19 +82,19 @@ public class VendingMachine {
 	
 	// vendingMachine 자체와 상호작용
 	public void insertCash(Currency currency, int amount){
-		state.insertCash(currency, amount);
+		state.insertCash(this, currency, amount);
 	}
 	
 	public void selectItem(Item item) throws ChangeNotAvailableException {
-		state.selectItem(item);
+		state.selectItem(this, item);
 
 		// 구매가 성공적으로 이뤄져 상품 배출이 필요하면 해당 동작 수행.
-		if (state == itemSold)
-			state.dispenseItem(item);
+		if (state == State.ITEM_SOLD)
+			state.dispenseItem(this, item);
 	}
 	
 	public void cancel() {
-		state.cancel();
+		state.cancel(this);
 	}
 	
 	// 거스름 처리
@@ -146,22 +136,6 @@ public class VendingMachine {
 		System.out.println("=========================");
 		cashRegister.debugPrint();
 		inventoryStock.debugPrint();
-	}
-
-	public State getItemEmpty() {
-		return itemEmpty;
-	}
-
-	public State getCoinEmpty() {
-		return coinEmpty;
-	}
-
-	public State getCoinInserted() {
-		return coinInserted;
-	}
-
-	public State getItemSold() {
-		return itemSold;
 	}
 
 	public void setState(State state) {
