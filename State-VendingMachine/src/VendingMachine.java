@@ -86,11 +86,22 @@ public class VendingMachine {
 	}
 	
 	public void selectItem(Item item) throws ChangeNotAvailableException {
-		state.selectItem(this, item);
-
-		// 구매가 성공적으로 이뤄져 상품 배출이 필요하면 해당 동작 수행.
-		if (state == State.ITEM_SOLD)
-			state.dispenseItem(this, item);
+		// 상품을 고르는 과정에서 발생할 수 있는 예외 처리.
+		try {
+			state.selectItem(this, item);
+		}
+		
+		// 상위 메소드에 예외 발생 여부를 알리기 위해 예외 되던지기.
+		catch (ChangeNotAvailableException e) {
+			throw e;
+		}
+		
+		// 예외 발생 여부와 관계없이 상품 배출이 필요하면 수행해야 함.
+		finally {
+			if (state == State.ITEM_SOLD) {
+				state.dispenseItem(this, item);
+			}
+		}
 	}
 	
 	public void cancel() {

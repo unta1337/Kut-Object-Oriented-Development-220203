@@ -17,7 +17,7 @@ public enum State {
         }
 
         @Override
-        public void selectItem(VendingMachine vendingMachine, Item item) throws ChangeNotAvailableException {
+        public void selectItem(VendingMachine vendingMachine, Item item) {
             System.out.println("Please insert a coin first.");
         }
 
@@ -45,14 +45,16 @@ public enum State {
         public void selectItem(VendingMachine vendingMachine, Item item) throws ChangeNotAvailableException {
             System.out.println("You've seleted " + item.name().toLowerCase() + ".");
 
-            // 상품 구매할 수 없을 때 처리.
+            // 상품을 구매할 수 없을 때 처리.
+            boolean changeReturned = false;
             if (!vendingMachine.canBuyItem(item)) {
                 // 다른 구매 가능한 상품이 없으면 거스름 반환.
-                if (!vendingMachine.canBuyAnyItem())
+                if (!vendingMachine.canBuyAnyItem()) {
                     vendingMachine.returnChange();
+                    changeReturned = true;
+                }
 
-                // 거스름 관련 예외 발생.
-                throw new ChangeNotAvailableException(!vendingMachine.canBuyAnyItem());
+                throw new ChangeNotAvailableException(changeReturned);
             }
 
             vendingMachine.setState(ITEM_SOLD);
@@ -80,7 +82,7 @@ public enum State {
         }
 
         @Override
-        public void selectItem(VendingMachine vendingMachine, Item item) throws ChangeNotAvailableException {
+        public void selectItem(VendingMachine vendingMachine, Item item) {
             System.out.println("Vending machine is empty.");
         }
 
@@ -102,7 +104,7 @@ public enum State {
         }
 
         @Override
-        public void selectItem(VendingMachine vendingMachine, Item item) throws ChangeNotAvailableException {
+        public void selectItem(VendingMachine vendingMachine, Item item) {
             System.out.println("Product is on its way! Please wait for a second.");
 
         }
@@ -113,7 +115,7 @@ public enum State {
         }
 
         @Override
-        public void dispenseItem(VendingMachine vendingMachine, Item item) {
+        public void dispenseItem(VendingMachine vendingMachine, Item item) throws ChangeNotAvailableException {
             System.out.println("Product is on its way! Please wait for a second.");
 
             // 상품 배출.
@@ -123,19 +125,24 @@ public enum State {
             CashRegister newUserCashRegister = vendingMachine.getChange(vendingMachine.getInsertedBalance() - item.price);
             vendingMachine.setUserCashRegister(newUserCashRegister);
 
-            // 더 이상 구매 가능한 상품이 없으면 상태 전환.
+            vendingMachine.setState(COIN_INSERTED);
+
+            // 다른 구매 가능한 상품이 없으면 거스름 반환.
             if (!vendingMachine.canBuyAnyItem()) {
                 vendingMachine.returnChange();
-                return;
-            }
 
-            // 계속해서 구매 가능하면 동전 삽입 상태로 전환.
-            vendingMachine.setState(COIN_INSERTED);
+                // 구매 불가능 이유에 따라서 서로 다른 처리.
+                if (vendingMachine.isEmpty()) {
+                    vendingMachine.setState(ITEM_EMPTY);
+                } else {
+                    throw new ChangeNotAvailableException(true);
+                }
+            }
         }
     };
 
     public abstract void insertCash(VendingMachine vendingMachine, Currency currency, int amount);
     public abstract void selectItem(VendingMachine vendingMachine, Item item) throws ChangeNotAvailableException;
     public abstract void cancel(VendingMachine vendingMachine);
-    public abstract void dispenseItem(VendingMachine vendingMachine, Item item);
+    public abstract void dispenseItem(VendingMachine vendingMachine, Item item) throws ChangeNotAvailableException;
 }

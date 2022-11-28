@@ -1,3 +1,4 @@
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -26,12 +27,16 @@ class VendingMachineTest {
 		vMachine.selectItem(Item.Cider);
 		assertEquals(vMachine.getNumberOfItems(Item.Cider),2);
 		assertEquals(vMachine.getBalance(), 10_500);
+		// 예외 발생 검사.
+		boolean isExceptionThrown = false;
 		try {
 			vMachine.selectItem(Item.Cola);
 		}
 		catch(ChangeNotAvailableException e) {
+			isExceptionThrown = true;
 			assertTrue(e.changeReturned);
 		}
+		assertTrue(isExceptionThrown);
 		assertEquals(vMachine.getNumberOfItems(Item.Cola),1);
 		assertEquals(vMachine.getAmount(Currency.C100), 6);
 		assertEquals(vMachine.getBalance(), 10_100);
